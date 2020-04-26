@@ -1,5 +1,6 @@
 import os
 import aiohttp
+import asyncio
 import discord
 import datetime
 import configparser
@@ -69,7 +70,6 @@ class Ninja (commands.AutoShardedBot):
 
         if not hasattr(self, 'uptime'):
             self.uptime = datetime.datetime.utcnow()
-            print(self.uptime)
 
         print(f"\nLogged in as: \033[92m{self.user.name}\033[0m. (ID: {self.user.id})\n")
 
