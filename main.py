@@ -22,6 +22,8 @@ class Ninja (commands.AutoShardedBot):
         self.description    = config['bot']['description']
         self.unsplash_token = config['tokens']['unsplash']
 
+        self.ready          = False
+
 
 
         super().__init__(command_prefix = self.command_prefix, description = self.description,
@@ -30,10 +32,12 @@ class Ninja (commands.AutoShardedBot):
 
 
 
+    async def on_connect (self):
+
+
         print('\n+---+---+---+---+---+---+---+---+---+---+---+---+')
         print('| u | n | s | e | e | n | \033[91m;\033[0m | n | i | n | j | a |')
         print('+---+---+---+---+---+---+---+---+---+---+---+---+\n')
-
 
 
         extensions = os.listdir('./cogs')
@@ -48,6 +52,26 @@ class Ninja (commands.AutoShardedBot):
 
                 except:
                     print(f"Failed to load extension \033[94m{extension_name}\033[0m..")
+
+
+
+    async def on_ready (self):
+
+        if not self.ready:
+            self.ready = True
+            await self.change_presence(
+                status   = discord.Status.online,
+                activity = discord.Activity(
+                    type = discord.ActivityType.listening,
+                    name = f'{self.command_prefix}help'
+                )
+            )
+
+        if not hasattr(self, 'uptime'):
+            self.uptime = datetime.datetime.utcnow()
+            print(self.uptime)
+
+        print(f"\nLogged in as: \033[92m{self.user.name}\033[0m. (ID: {self.user.id})\n")
 
 
 
@@ -68,23 +92,6 @@ class Ninja (commands.AutoShardedBot):
 
         elif isinstance(error, commands.ArgumentParsingError):
             await ctx.send(error)
-
-
-
-    async def on_ready (self):
-
-        await self.change_presence(
-            status   = discord.Status.online,
-            activity = discord.Activity(
-                type = discord.ActivityType.listening,
-                name = f'{self.command_prefix}help'
-            )
-        )
-
-        if not hasattr(self, 'uptime'):
-            self.uptime = datetime.datetime.utcnow()
-
-        print(f"\nLogged in as: \033[92m{self.user.name}\033[0m. (ID: {self.user.id})\n")
 
 
 
