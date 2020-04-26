@@ -145,6 +145,44 @@ class Fun (commands.Cog):
 
 
 
+    @commands.group(name = 'meme')
+    async def _meme (self, ctx):
+
+        """Create your own memes!"""
+
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(str(ctx.command))
+
+
+
+    @_meme.command(name = 'create', aliases = ['make'])
+    async def create_meme (self, ctx, template: str, line1: str, line2: str):
+
+        """Example: ;meme create snek \"No booper\" \"do NOT!\""""
+
+        def escape_literals (content):
+            return content.replace('-', '--').replace('_', '__').replace('?', '~q').replace(' ', '%20').replace("''", "\"")
+
+        try:
+            async with self.session.get(f'https://memegen.link/{template}/{escape_literals(line1)}/{escape_literals(line2)}') as response:
+                parsed_response = await response.json()
+                image_link = parsed_response['direct']['masked']
+                await ctx.send(image_link)
+
+        except Exception as e:
+            await ctx.send(e)
+
+
+
+    @_meme.command(name = 'templates', aliases = ['list'])
+    async def list_templates (self, ctx):
+
+        """See available templates."""
+
+        await ctx.send('See a list of available templates here: https://memegen.link/api/templates/')
+
+
+
 
 
 
