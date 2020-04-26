@@ -24,6 +24,21 @@ class Admin (commands.Cog):
 
 
 
+    @commands.command(hidden = True, name = 'changename')
+    @commands.is_owner()
+    async def change_name (self, ctx, *, new_name: str):
+
+        msg = await ctx.send("Attempting to change my username ...")
+
+        try:
+            await self.bot.user.edit(username = new_name)
+            await msg.edit(content = f"Successfully changed my username to **{new_name}**.")
+
+        except:
+            await msg.edit(content = "There was an error changing my username.")
+
+
+
     @commands.command(hidden = True, name = 'status')
     @commands.is_owner()
     async def change_status (self, ctx, type, *, content):
