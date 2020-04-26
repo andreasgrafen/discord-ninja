@@ -59,7 +59,7 @@ class Info (commands.Cog):
         e.add_field(name = 'Region',        value = guild.region)
         e.add_field(name = 'Members',       value = guild.member_count)
         e.add_field(name = 'Textchannels',  value = text_channels)
-        e.add_field(name = 'Voicechannels', value = text_channels)
+        e.add_field(name = 'Voicechannels', value = voice_channels)
         e.add_field(name = 'Created',       value = guild.created_at.isoformat(" ", "seconds"))
         e.add_field(name = 'Roles',         value = roles)
 
