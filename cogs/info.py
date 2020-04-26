@@ -117,6 +117,38 @@ class Info (commands.Cog):
 
 
 
+    @commands.command(name = 'spotify', alias = ['music', 'listening'])
+    @commands.guild_only()
+    async def get_spotify_status (self, ctx, member: discord.Member = None):
+
+        """Get the current song a user is listening to."""
+
+        if member is None:
+            member     = ctx.author
+
+        activity = member.activity
+
+        if activity is None:
+            await ctx.send(f"{member.display_name} isn't playing anything on Spotify right now.")
+            return
+
+        if activity.type == discord.ActivityType.listening and activity.name == 'Spotify':
+            e                    = discord.Embed(description = '\u200b')
+            e.add_field(name     = 'Artist', value = ', '.join(activity.artists))
+            e.add_field(name     = 'Album', value = activity.album)
+            e.add_field(name     = 'Duration', value = str(activity.duration)[3:].split('.', 1)[0])
+            e.title              = f'**{activity.title}**'
+            e.set_thumbnail(url  = activity.album_cover_url)
+            e.url                = f'https://open.spotify.com/track/{activity.track_id}'
+            e.colour             = activity.colour
+            e.set_footer(text    = f'{member.display_name} is currently playing this song.')
+            await ctx.send(embed = e)
+
+        else:
+            await ctx.send(f"{member.display_name} isn't playing anything on Spotify right now.")
+
+
+
 
 
 def setup (bot):
