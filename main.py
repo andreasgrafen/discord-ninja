@@ -120,9 +120,3 @@ class Ninja (commands.AutoShardedBot):
 
         except:
             print("Something went wrong while starting the bot.")
-
-
-
-
-
-Ninja().run()
