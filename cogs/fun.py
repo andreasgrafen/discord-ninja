@@ -32,7 +32,7 @@ class Fun (commands.Cog):
     @commands.guild_only()
     async def random (self, ctx, *args):
 
-        """Return a random value.
+        """Returns a random value.
         This command accepts two options. You can use either one of them:
         user: Returns a randomly selected user that's currently online.
         choice: Takes a list of options and chooses a random option."""
@@ -97,7 +97,7 @@ class Fun (commands.Cog):
     @commands.command(name = 'fox', aliases = ['fox-noises', 'randomfox'])
     async def get_random_fox (self, ctx):
 
-        """Return a random fox image."""
+        """Returns a random fox image."""
 
         try:
             async with self.session.get('http://randomfox.ca/floof') as response:
@@ -113,7 +113,7 @@ class Fun (commands.Cog):
     @commands.command(name = 'bunny', aliases = ['rabbit', 'chungus'])
     async def get_random_bunny (self, ctx):
 
-        """Returs a random bunny image."""
+        """Returns a random bunny image."""
 
         try:
             async with self.session.get(f'https://api.unsplash.com/search/photos?query=bunny&page={random.randint(0,10)}&per_page=30&client_id={self.unsplash_token}') as response:
