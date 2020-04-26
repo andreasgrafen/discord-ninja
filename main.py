@@ -30,6 +30,12 @@ class Ninja (commands.AutoShardedBot):
 
 
 
+        print('\n+---+---+---+---+---+---+---+---+---+---+---+---+')
+        print('| u | n | s | e | e | n | \033[91m;\033[0m | n | i | n | j | a |')
+        print('+---+---+---+---+---+---+---+---+---+---+---+---+\n')
+
+
+
         extensions = os.listdir('./cogs')
         for extension in extensions:
 
@@ -51,10 +57,14 @@ class Ninja (commands.AutoShardedBot):
             await ctx.author.send("This command cannot be used in private messages.")
 
         elif isinstance(error, commands.DisabledCommand):
-            await ctx.author.send("Sorry. This command has been disabled.")
+            await ctx.send("Sorry. This command has been disabled.")
+
+        elif isinstance(error, commands.MissingRequiredArgument):
+            missing_argument = str(error).split(' ', 1)[0]
+            await ctx.send(f"You're missing the following argument: `{missing_argument}`")
 
         elif isinstance(error, commands.MissingPermissions):
-            await ctx.send("Sorry but you're lacking permission to use this command.")
+            await ctx.send("You're missing permissions to use this command.")
 
         elif isinstance(error, commands.ArgumentParsingError):
             await ctx.send(error)
@@ -110,6 +120,8 @@ class Ninja (commands.AutoShardedBot):
 
         except:
             print("Something went wrong while starting the bot.")
+
+
 
 
 
