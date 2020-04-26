@@ -28,37 +28,55 @@ class Fun (commands.Cog):
 
 
 
-    @commands.command(name = 'random', aliases = ['rng', 'lucky'])
+    @commands.group(name = 'random', aliases = ['rng', 'lucky'])
     @commands.guild_only()
-    async def random (self, ctx, *args):
+    async def random (self, ctx):
 
-        """Returns a random value.
-        This command accepts two options. You can use either one of them:
-        user: Returns a randomly selected user that's currently online.
-        choice: Takes a list of options and chooses a random option."""
+        """Returns something random."""
 
-        if not args:
-            await ctx.send("This command accepts two options. You can use either one of them:\n"
-                           "user: Returns a randomly selected user that's currently online.\n"
-                           "choice: Takes a list of options and chooses a random option.")
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(str(ctx.command))
 
-        elif args[0] == 'user':
-            online_users = self.get_online_users(ctx.guild.members)
-            random_user  = random.choice(online_users)
 
-            if ctx.channel.permissions_for(ctx.author).mention_everyone:
-                winner = random_user.mention
 
-            else:
-                winner = random_user.display_name
+    @random.command(name = 'user', aliases = ['person'])
+    async def random_user (self, ctx):
 
-            await ctx.send(f"And the winner is {winner}!")
+        """Returns a random online user."""
 
-        elif args[0] == 'choice':
-            choices = list(args)
-            choices.pop(0) # remove the "choice" keyword
-            winner = random.choice(choices)
-            await ctx.send(f"The winning option is {winner}.")
+        online_users = self.get_online_users(ctx.guild.members)
+        random_user  = random.choice(online_users)
+
+        if ctx.channel.permissions_for(ctx.author).mention_everyone:
+            winner = random_user.mention
+
+        else:
+            winner = random_user.display_name
+
+        await ctx.send(f"And the winner is **{winner}**!")
+
+
+
+    @random.command(name = 'choice', aliases = ['list'])
+    async def random_choice (self, ctx, *choices: str):
+
+        """Returns a value from provided choices."""
+
+        all_choices = list(choices)
+        all_choices.pop(0) # remove the "choice" keyword
+        winner = random.choice(all_choices)
+        await ctx.send(f"The winning option is **{winner}**.")
+
+
+
+    @random.command(name = 'number', aliases = ['#'])
+    async def random_number (self, ctx, min: int = 0, max: int = 100):
+
+        """Returns a random number.
+        You can provide your own min/max values as argument.
+        Otherwise it will default to 0 to 100."""
+
+        await ctx.send(random.randint(min, max))
 
 
 
