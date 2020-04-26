@@ -30,18 +30,22 @@ class Moderation (commands.Cog):
 
 
 
-    @commands.command(name = 'purge', aliases = ['clear', 'remove', 'prune'])
+    @commands.group(name = 'purge', aliases = ['clear', 'remove', 'prune'])
     @commands.has_permissions(manage_messages = True)
     @commands.guild_only()
-    async def purge_messages (self, ctx, *limit):
+    async def purge (self, ctx):
+
+        """Purge (specific) messages."""
+
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(str(ctx.command))
+
+
+
+    @purge.command(name = 'all')
+    async def purge_all (self, ctx, limit: int = 10):
 
         """Purge a specified ammount of messages."""
-
-        try:
-            limit = int(limit[0])
-
-        except IndexError:
-            limit = 1
 
         deleted = 0
         while limit >= 1:
@@ -50,6 +54,20 @@ class Moderation (commands.Cog):
             limit -= cap
 
         await ctx.send(content = f":put_litter_in_its_place: {deleted} Messages deleted.", delete_after = 10)
+
+
+
+    @purge.command(name = 'user')
+    async def purge_user (self, ctx, member: discord.Member, limit: int = 10):
+
+        """Purge X messages from a specified user."""
+
+        try:
+            await ctx.channel.purge(limit = limit, check = lambda e: e.author == member)
+            await ctx.send(content = f":put_litter_in_its_place: {limit} Messages from {member.mention} deleted.", delete_after = 10)
+
+        except Exception as e:
+            await ctx.send(e)
 
 
 
