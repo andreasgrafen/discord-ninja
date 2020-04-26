@@ -13,6 +13,17 @@ class Admin (commands.Cog):
 
 
 
+    @commands.command(hidden = True, name = 'shutdown')
+    @commands.is_owner()
+    async def shutdown_bot (self, ctx):
+
+        await ctx.send("Shutting down the bot.")
+        await self.bot.session.close()
+        await self.bot.logout()
+        await self.bot.close()
+
+
+
     @commands.command(hidden = True, name = 'load')
     @commands.is_owner()
     async def load_cog (self, ctx, *, extension: str):
