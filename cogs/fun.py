@@ -29,7 +29,6 @@ class Fun (commands.Cog):
 
 
     @commands.group(name = 'random', aliases = ['rng', 'lucky'])
-    @commands.guild_only()
     async def random (self, ctx):
 
         """Returns something random."""
@@ -40,6 +39,7 @@ class Fun (commands.Cog):
 
 
     @random.command(name = 'user', aliases = ['person'])
+    @commands.guild_only()
     async def random_user (self, ctx):
 
         """Returns a random online user."""
