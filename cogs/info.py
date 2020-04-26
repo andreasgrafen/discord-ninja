@@ -1,5 +1,6 @@
 import time
 import discord
+import datetime
 
 from discord.ext import commands
 
@@ -23,6 +24,21 @@ class Info (commands.Cog):
         msg    = await ctx.send("Pong!")
         ping   = (time.monotonic() - before) * 1000
         await msg.edit(content = f"My latency is {int(ping)}ms.")
+
+
+
+    @commands.command(name = 'uptime', aliases = ['onlinetime', 'alive'])
+    async def get_uptime (self, ctx):
+
+        """Tells you how long the bot has been up for."""
+
+        uptime_complete = datetime.datetime.utcnow() - self.bot.uptime
+        uptime_parts    = str(uptime_complete).split(':')
+        uptime_hours     = uptime_parts[0]
+        uptime_minutes   = uptime_parts[1]
+        uptime_seconds   = uptime_parts[2].split('.')[0]
+
+        await ctx.send(f"**Uptime:** {uptime_hours} hours, {uptime_minutes} minutes and {uptime_seconds} seconds.")
 
 
 
