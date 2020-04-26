@@ -33,7 +33,7 @@ class Info (commands.Cog):
         This command will create a Discord oAuth link."""
 
         await ctx.send("Use this URL to invite me to your server."
-                      f"{discord.utils.oauth_url(self.client.user.id)}")
+                      f"{discord.utils.oauth_url(self.bot.user.id)}")
 
 
 
