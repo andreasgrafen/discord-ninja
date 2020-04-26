@@ -12,7 +12,7 @@ class Fun (commands.Cog):
     def __init__ (self, bot):
 
         self.bot            = bot
-        self.session        = aiohttp.ClientSession()
+        self.session        = self.bot.session
         self.unsplash_token = self.bot.unsplash_token
 
 

@@ -23,6 +23,7 @@ class Ninja (commands.AutoShardedBot):
         self.description    = config['bot']['description']
         self.unsplash_token = config['tokens']['unsplash']
 
+        self.session        = aiohttp.ClientSession()
         self.ready          = False
 
 
