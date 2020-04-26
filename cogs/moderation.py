@@ -15,6 +15,7 @@ class Moderation (commands.Cog):
 
     @commands.command(name = 'echo', aliases = ['say', 'tell'])
     @commands.has_permissions(administrator = True)
+    @commands.guild_only()
     async def echo (self, ctx, *, content: str):
 
         """Repeats a given message."""
@@ -31,6 +32,7 @@ class Moderation (commands.Cog):
 
     @commands.command(name = 'purge', aliases = ['clear', 'remove', 'prune'])
     @commands.has_permissions(manage_messages = True)
+    @commands.guild_only()
     async def purge_messages (self, ctx, *limit):
 
         """Purge a specified ammount of messages."""
@@ -53,6 +55,7 @@ class Moderation (commands.Cog):
 
     @commands.command(name = 'nickname', aliases = ['nick'])
     @commands.has_permissions(manage_nicknames = True)
+    @commands.guild_only()
     async def change_user_nick (self, ctx, member: discord.Member, *, new_nick: str = None):
 
         """Change a nickname.

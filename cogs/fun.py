@@ -29,6 +29,7 @@ class Fun (commands.Cog):
 
 
     @commands.command(name = 'random', aliases = ['rng', 'lucky'])
+    @commands.guild_only()
     async def random (self, ctx, *args):
 
         """Return a random value.
