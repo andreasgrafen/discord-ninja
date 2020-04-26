@@ -27,11 +27,6 @@ class Fun (commands.Cog):
         return online
 
 
-    def close_session (self):
-        if self.session is not None:
-            return self.session.close()
-
-
 
     @commands.command(name = 'random', aliases = ['rng', 'lucky'])
     async def random (self, ctx, *args):
