@@ -24,6 +24,36 @@ class Admin (commands.Cog):
 
 
 
+    @commands.command(hidden = True, name = 'status')
+    @commands.is_owner()
+    async def change_status (self, ctx, type, *, content):
+
+        if type == 'play':
+            status_type = discord.ActivityType.playing
+
+        elif type == 'listen':
+            status_type = discord.ActivityType.listening
+
+        elif type == 'watch':
+            status_type = discord.ActivityType.watching
+
+        else:
+            await ctx.send("Please specify a viable activity type. Available options are: `play`, `listen` and `watch`.")
+            return
+
+        try:
+            await self.bot.change_presence(
+                activity = discord.Activity(
+                    type = status_type,
+                    name = content
+                )
+            )
+
+        except:
+            await ctx.send("Something went wrong while changing the bots status.")
+
+
+
     @commands.command(hidden = True, name = 'load')
     @commands.is_owner()
     async def load_cog (self, ctx, *, extension: str):
