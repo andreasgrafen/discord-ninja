@@ -14,12 +14,16 @@ class Reactions (commands.Cog):
 
 
     def has_exact_match (self, triggers, message):
+
         values = []
+
         for item in triggers:
             if re.search(r'\b' + item + r'\b', message):
                 values.append(True)
+
             else:
                 values.append(False)
+
         return values
 
 
