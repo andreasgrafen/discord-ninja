@@ -187,7 +187,7 @@ class Fun (commands.Cog):
 
 
 
-    @commands.group(name = 'cocktail', aliases = ['cocktails'])
+    @commands.group(name = 'cocktail')
     async def cocktail (self, ctx):
 
         """All the cocktail things!"""
@@ -197,7 +197,7 @@ class Fun (commands.Cog):
 
 
 
-    @cocktail.command(name = 'search', aliases = ['find'])
+    @cocktail.command(name = 'search', aliases = ['find', 'grab', 'pull'])
     async def search_cocktails (self, ctx, *, cocktailname: str):
 
         """Search for cocktails by name."""
@@ -221,13 +221,17 @@ class Fun (commands.Cog):
 
 
     @cocktail.command(name = 'get', aliases = ['recipe', 'info'])
-    async def get_cocktail (self, ctx, cocktail_id: str):
+    async def get_cocktail (self, ctx, cocktail_id: int):
 
         """Get the info for a specific cocktail."""
 
         try:
             async with self.session.get(f'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={cocktail_id}') as response:
                 parsed_response = await response.json()
+
+                if parsed_response['drinks'] is None:
+                    await ctx.send(f'There is no cocktail with this ID.\nSearch for a drink with `{self.bot.command_prefix}cocktail search`.')
+                    return
 
                 cocktail = parsed_response['drinks'][0]
 

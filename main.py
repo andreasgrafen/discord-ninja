@@ -91,6 +91,9 @@ class Ninja (commands.AutoShardedBot):
         elif isinstance(error, commands.MissingPermissions):
             await ctx.send("You're missing permissions to use this command.")
 
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send("The provided argument doesn't match the requirements.")
+
         elif isinstance(error, commands.ArgumentParsingError):
             await ctx.send(error)
 
