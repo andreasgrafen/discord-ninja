@@ -137,7 +137,11 @@ class Fun (commands.Cog):
             async with self.session.get(f'https://api.unsplash.com/search/photos?query=bunny&page={random.randint(0,10)}&per_page=30&client_id={self.unsplash_token}') as response:
                 parsed_response = await response.json()
                 entry_number    = random.randint(0,29)
-                msg = await ctx.send(parsed_response['results'][entry_number]['links']['html'] + '?utm_source=unseen;ninja_bot&utm_medium=referral')
+                e = discord.Embed()
+                e.set_image(url = parsed_response['results'][entry_number]['urls']['regular'])
+                e.set_footer(text = 'Photographer: ' + parsed_response['results'][entry_number]['user']['name'])
+                e.add_field(name = 'Link', value = parsed_response['results'][entry_number]['user']['links']['html'] + '?utm_source=unseen;ninja_bot&utm_medium=referral')
+                msg = await ctx.send(embed = e)
                 await msg.add_reaction('🐰')
 
         except:
