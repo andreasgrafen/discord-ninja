@@ -187,7 +187,7 @@ class Fun (commands.Cog):
 
 
 
-    @commands.group(name = 'cocktail')
+    @commands.group(name = 'cocktail', aliases = ['cocktails'])
     async def cocktail (self, ctx):
 
         """All the cocktail things!"""
@@ -197,7 +197,7 @@ class Fun (commands.Cog):
 
 
 
-    @cocktail.command(name = 'search', aliases = ['find', 'grab', 'pull'])
+    @cocktail.command(name = 'search', aliases = ['find'])
     async def search_cocktails (self, ctx, *, cocktailname: str):
 
         """Search for cocktails by name."""
