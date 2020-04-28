@@ -16,6 +16,9 @@ class Reactions (commands.Cog):
     @commands.Cog.listener()
     async def on_message (self, ctx):
 
+        if ctx.clean_content.startswith(self.bot.command_prefix) or ctx.author.bot:
+            return
+
         # :lollipop:
         if 'loli' in ctx.clean_content.lower():
             await ctx.add_reaction('🍭')

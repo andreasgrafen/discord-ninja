@@ -187,6 +187,73 @@ class Fun (commands.Cog):
 
 
 
+    @commands.group(name = 'cocktail')
+    async def cocktail (self, ctx):
+
+        """All the cocktail things!"""
+
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(str(ctx.command))
+
+
+
+    @cocktail.command(name = 'search', aliases = ['find', 'grab', 'pull'])
+    async def search_cocktails (self, ctx, *, cocktailname: str):
+
+        """Search for cocktails by name."""
+
+        try:
+            async with self.session.get(f'https://www.thecocktaildb.com/api/json/v1/1/search.php?s={cocktailname}') as response:
+                parsed_response = await response.json()
+                cocktail_list = '**Cocktail Results:**\n'
+
+                try:
+                    for cocktail in parsed_response['drinks']:
+                        cocktail_list += f"{cocktail['strDrink']}: `{cocktail['idDrink']}`\n"
+                    await ctx.send(cocktail_list)
+
+                except:
+                    await ctx.send("I couldn't find any cocktails for that searchterm. :c")
+
+        except Exception as e:
+            await ctx.send(e)
+
+
+
+    @cocktail.command(name = 'get', aliases = ['recipe', 'info'])
+    async def get_cocktail (self, ctx, cocktail_id: str):
+
+        """Get the info for a specific cocktail."""
+
+        try:
+            async with self.session.get(f'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={cocktail_id}') as response:
+                parsed_response = await response.json()
+
+                cocktail = parsed_response['drinks'][0]
+
+                ingredients = ''
+                index = 1
+                while index <= 15:
+                    ingredient = f"{cocktail[f'strIngredient{index}']}"
+                    amount     = f"{cocktail[f'strMeasure{index}']}"
+                    print(f'{ingredient}: {amount}')
+                    if cocktail[f'strIngredient{index}'] is not None:
+                        if cocktail[f'strMeasure{index}'] is None:
+                            ingredients += f"{ingredient}\n"
+                        else:
+                            ingredients += f"{amount}of {ingredient}\n"
+                    index += 1
+
+                e = discord.Embed(title = f"{cocktail['strDrink']} ({cocktail['strAlcoholic']})")
+                e.add_field(name = 'Ingredients', value = ingredients)
+                e.add_field(name = 'Instructions', value = cocktail[f'strInstructions'])
+                e.set_thumbnail(url = cocktail['strDrinkThumb'])
+
+                await ctx.send(embed = e)
+
+        except Exception as e:
+            await ctx.send(f'error: {e}')
+
 
 
 
