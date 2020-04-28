@@ -13,7 +13,7 @@ class Reactions (commands.Cog):
         self.bot = bot
 
 
-    def exact_match (self, triggers, message):
+    def has_exact_match (self, triggers, message):
         values = []
         for item in triggers:
             if re.search(r'\b' + item + r'\b', message):
@@ -35,36 +35,36 @@ class Reactions (commands.Cog):
             await ctx.add_reaction('🍭')
 
         # :eggplant:
-        eggplant_triggers = ['penis', 'cock', 'dick']
-        if any(self.exact_match(eggplant_triggers, ctx.clean_content.lower())) is True:
+        eggplant_triggers = ['penis', 'cock', 'cocks', 'dick', 'dicks']
+        if any(self.has_exact_match(eggplant_triggers, ctx.clean_content.lower())) is True:
             msg = await ctx.channel.send('I have the biggest one around here.')
             await msg.add_reaction('🍆')
 
         # :duck:
-        duck_triggers = ['duck', 'quack', 'dick']
-        if any(self.exact_match(duck_triggers, ctx.clean_content.lower())) is True:
+        duck_triggers = ['duck', 'ducks', 'quack', 'dick', 'dicks']
+        if any(self.has_exact_match(duck_triggers, ctx.clean_content.lower())) is True:
             await ctx.add_reaction('🦆')
 
         # :poop:
-        poop_triggers = ['poop', 'shit']
-        if any(self.exact_match(poop_triggers, ctx.clean_content.lower())) is True:
+        poop_triggers = ['poop', 'shit', 'bullshit']
+        if any(self.has_exact_match(poop_triggers, ctx.clean_content.lower())) is True:
             await ctx.add_reaction('💩')
 
         # :heart:
         heart_triggers = ['heart', 'love', '<3']
-        if any(self.exact_match(heart_triggers, ctx.clean_content.lower())) is True:
+        if any(self.has_exact_match(heart_triggers, ctx.clean_content.lower())) is True:
             await ctx.add_reaction('❤')
 
         # :gay:
         gay_triggers = ['gay', 'gae', 'homo']
-        if any(self.exact_match(gay_triggers, ctx.clean_content.lower())) is True:
+        if any(self.has_exact_match(gay_triggers, ctx.clean_content.lower())) is True:
             hearts = ['❤', '🧡', '💛', '💚', '💙', '💜']
             for heart in hearts:
                 await ctx.add_reaction(heart)
 
         # :peach:
-        peach_triggers = ['butt', 'ass', 'peach']
-        if any(self.exact_match(peach_triggers, ctx.clean_content.lower())) is True:
+        peach_triggers = ['butt', 'butts', 'ass', 'peach', 'peaches']
+        if any(self.has_exact_match(peach_triggers, ctx.clean_content.lower())) is True:
             await ctx.add_reaction('🍑')
 
 
