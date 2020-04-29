@@ -34,12 +34,14 @@ class Fun (commands.Cog):
         def escape_literals (content):
             return content.replace('-', '--').replace('_', '__').replace('?', '~q').replace(' ', '%20').replace("''", "\"")
 
-        try:
-            response = await http.get(f'https://memegen.link/{template}/{escape_literals(line1)}/{escape_literals(line2)}', res_method = 'json')
-            await ctx.send(response['direct']['masked'])
+        async with ctx.channel.typing():
 
-        except Exception as e:
-            await ctx.send(e)
+            try:
+                response = await http.get(f'https://memegen.link/{template}/{escape_literals(line1)}/{escape_literals(line2)}', res_method = 'json')
+                await ctx.send(response['direct']['masked'])
+
+            except Exception as e:
+                await ctx.send(e)
 
 
 
@@ -67,20 +69,22 @@ class Fun (commands.Cog):
 
         """Search for cocktails by name."""
 
-        try:
-            response = await http.get(f'https://www.thecocktaildb.com/api/json/v1/1/search.php?s={cocktailname}', res_method = 'json')
-            cocktail_list = '**Cocktail Results:**\n'
+        async with ctx.channel.typing():
 
             try:
-                for cocktail in response['drinks']:
-                    cocktail_list += f"{cocktail['strDrink']}: `{cocktail['idDrink']}`\n"
-                await ctx.send(cocktail_list)
+                response = await http.get(f'https://www.thecocktaildb.com/api/json/v1/1/search.php?s={cocktailname}', res_method = 'json')
+                cocktail_list = '**Cocktail Results:**\n'
 
-            except:
-                await ctx.send("I couldn't find any cocktails for that searchterm. :c")
+                try:
+                    for cocktail in response['drinks']:
+                        cocktail_list += f"{cocktail['strDrink']}: `{cocktail['idDrink']}`\n"
+                    await ctx.send(cocktail_list)
 
-        except Exception as e:
-            await ctx.send(e)
+                except:
+                    await ctx.send("I couldn't find any cocktails for that searchterm. :c")
+
+            except Exception as e:
+                await ctx.send(e)
 
 
 
@@ -123,23 +127,27 @@ class Fun (commands.Cog):
     @cocktail.command(name = 'get', aliases = ['recipe', 'info'])
     async def get_cocktail (self, ctx, cocktail_id: int):
 
-        e = await self.get_cocktail_info(cocktail_id)
-        await ctx.send(embed = e)
+        async with ctx.channel.typing():
+
+            e = await self.get_cocktail_info(cocktail_id)
+            await ctx.send(embed = e)
 
 
 
     @cocktail.command(name = 'random', aliases = ['r'])
     async def get_random_cocktail (self, ctx):
 
-        try:
-            response = await http.get(f'https://www.thecocktaildb.com/api/json/v1/1/random.php', res_method = 'json')
-            cocktail_id = response['drinks'][0]['idDrink']
+        async with ctx.channel.typing():
 
-        except Exception as e:
-            await ctx.send(e)
+            try:
+                response = await http.get(f'https://www.thecocktaildb.com/api/json/v1/1/random.php', res_method = 'json')
+                cocktail_id = response['drinks'][0]['idDrink']
 
-        e = await self.get_cocktail_info(cocktail_id)
-        await ctx.send(embed = e)
+            except Exception as e:
+                await ctx.send(e)
+
+            e = await self.get_cocktail_info(cocktail_id)
+            await ctx.send(embed = e)
 
 
 

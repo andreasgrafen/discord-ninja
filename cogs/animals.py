@@ -21,13 +21,15 @@ class Animals (commands.Cog):
 
         """Returns a random cat image."""
 
-        try:
-            response = await http.get('http://aws.random.cat/meow', res_method = 'json')
-            msg = await ctx.send (response['file'])
-            await msg.add_reaction('🐾')
+        async with ctx.channel.typing():
 
-        except:
-            await ctx.send("There are no cats around right now. 🐾")
+            try:
+                response = await http.get('http://aws.random.cat/meow', res_method = 'json')
+                msg = await ctx.send (response['file'])
+                await msg.add_reaction('🐾')
+
+            except:
+                await ctx.send("There are no cats around right now. 🐾")
 
 
 
@@ -36,13 +38,15 @@ class Animals (commands.Cog):
 
         """Returns a random dog image."""
 
-        try:
-            response = await http.get('http://random.dog/woof', res_method = 'text')
-            msg = await ctx.send(f"https://random.dog/{response}")
-            await msg.add_reaction('🐶')
+        async with ctx.channel.typing():
 
-        except:
-            await ctx.send("There are no dogs around right now. 🐶")
+            try:
+                response = await http.get('http://random.dog/woof', res_method = 'text')
+                msg = await ctx.send(f"https://random.dog/{response}")
+                await msg.add_reaction('🐶')
+
+            except:
+                await ctx.send("There are no dogs around right now. 🐶")
 
 
 
@@ -51,13 +55,15 @@ class Animals (commands.Cog):
 
         """Returns a random fox image."""
 
-        try:
-            response = await http.get('http://randomfox.ca/floof', res_method = 'json')
-            msg = await ctx.send(response['image'])
-            await msg.add_reaction('🦊')
+        async with ctx.channel.typing():
 
-        except:
-            await ctx.send("There are no foxes around right now. 🦊")
+            try:
+                response = await http.get('http://randomfox.ca/floof', res_method = 'json')
+                msg = await ctx.send(response['image'])
+                await msg.add_reaction('🦊')
+
+            except:
+                await ctx.send("There are no foxes around right now. 🦊")
 
 
 
@@ -66,24 +72,26 @@ class Animals (commands.Cog):
 
         """Returns a random bunny image."""
 
-        try:
-            r = random.randint(0,10)
-            t = self.unsplash_token
-            url = f'https://api.unsplash.com/search/photos?query=bunny&page={r}&per_page=30&client_id={t}'
+        async with ctx.channel.typing():
 
-            response = await http.get(url, res_method = 'json')
-            entry_number = random.randint(0,29)
+            try:
+                r = random.randint(0,10)
+                t = self.unsplash_token
+                url = f'https://api.unsplash.com/search/photos?query=bunny&page={r}&per_page=30&client_id={t}'
 
-            e = discord.Embed()
-            e.set_image(url = response['results'][entry_number]['urls']['regular'])
-            e.set_footer(text = 'Photographer: ' + response['results'][entry_number]['user']['name'])
-            e.add_field(name = 'Link', value = response['results'][entry_number]['user']['links']['html'] + '?utm_source=unseen;ninja_bot&utm_medium=referral')
+                response = await http.get(url, res_method = 'json')
+                entry_number = random.randint(0,29)
 
-            msg = await ctx.send(embed = e)
-            await msg.add_reaction('🐰')
+                e = discord.Embed()
+                e.set_image(url = response['results'][entry_number]['urls']['regular'])
+                e.set_footer(text = 'Photographer: ' + response['results'][entry_number]['user']['name'])
+                e.add_field(name = 'Link', value = response['results'][entry_number]['user']['links']['html'] + '?utm_source=unseen;ninja_bot&utm_medium=referral')
 
-        except:
-            await ctx.send("There are no bunnies around right now. 🐰")
+                msg = await ctx.send(embed = e)
+                await msg.add_reaction('🐰')
+
+            except:
+                await ctx.send("There are no bunnies around right now. 🐰")
 
 
 
