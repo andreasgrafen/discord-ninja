@@ -77,7 +77,6 @@ class Moderation (commands.Cog):
     async def change_user_nick (self, ctx, member: discord.Member, *, new_nick: str = None):
 
         """Change a nickname.
-
         To reset a nickname leave the argument blank."""
 
         try:

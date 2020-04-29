@@ -28,7 +28,7 @@ class RNG (commands.Cog):
     @commands.group(name = 'random', aliases = ['rng', 'lucky'])
     async def random (self, ctx):
 
-        """Returns something random."""
+        """Who doesn't love some RNG?"""
 
         if ctx.invoked_subcommand is None:
             await ctx.send_help(str(ctx.command))

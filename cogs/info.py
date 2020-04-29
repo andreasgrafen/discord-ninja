@@ -83,7 +83,8 @@ class Info (commands.Cog):
     @commands.guild_only()
     async def get_spotify_status (self, ctx, member: discord.Member = None):
 
-        """Get the current song a user is listening to."""
+        """Get the current song a user is listening to.
+        Defaults to the author if no user is specified."""
 
         if member is None:
             member     = ctx.author

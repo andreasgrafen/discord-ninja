@@ -127,6 +127,8 @@ class Fun (commands.Cog):
     @cocktail.command(name = 'get', aliases = ['recipe', 'info'])
     async def get_cocktail (self, ctx, cocktail_id: int):
 
+        """Get instructions for a specified cocktail."""
+
         async with ctx.channel.typing():
 
             e = await self.get_cocktail_info(cocktail_id)
@@ -136,6 +138,8 @@ class Fun (commands.Cog):
 
     @cocktail.command(name = 'random', aliases = ['r'])
     async def get_random_cocktail (self, ctx):
+
+        """Get a completely random cocktail revipe."""
 
         async with ctx.channel.typing():
 
