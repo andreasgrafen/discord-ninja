@@ -53,6 +53,15 @@ class Bot (commands.Cog):
 
 
 
+    @commands.command(name = 'source', aliases = ['code', 'sourcecode', 'github'])
+    async def send_github_link (self, ctx):
+
+        """Get a link to the bots GitHub repository."""
+
+        await ctx.send(f"{ctx.bot.user.mention} is powered by this mess of random characters:\nhttps://andreas.grafen.info/github/discord-ninja")
+
+
+
 
 
 def setup (bot):
