@@ -10,11 +10,10 @@ deploy:
   only:
   - master
 
-  script:
-  - cp -rT ./cogs/ /srv/bot/discord-ninja-python/cogs
-  - cp -rT ./utils/ /srv/bot/discord-ninja-python/utils
-
-only:
   changes:
   - cogs/*.py
   - utils/*.py
+
+  script:
+  - cp -rT ./cogs/ /srv/bot/discord-ninja-python/cogs
+  - cp -rT ./utils/ /srv/bot/discord-ninja-python/utils
