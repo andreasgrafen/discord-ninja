@@ -1,7 +1,7 @@
 import random
-import aiohttp
 import discord
 
+from utils import http
 from discord.ext import commands
 
 
@@ -35,10 +35,8 @@ class Fun (commands.Cog):
             return content.replace('-', '--').replace('_', '__').replace('?', '~q').replace(' ', '%20').replace("''", "\"")
 
         try:
-            async with self.session.get(f'https://memegen.link/{template}/{escape_literals(line1)}/{escape_literals(line2)}') as response:
-                parsed_response = await response.json()
-                image_link = parsed_response['direct']['masked']
-                await ctx.send(image_link)
+            response = await http.get(f'https://memegen.link/{template}/{escape_literals(line1)}/{escape_literals(line2)}', res_method = 'json')
+            await ctx.send(response['direct']['masked'])
 
         except Exception as e:
             await ctx.send(e)
@@ -70,17 +68,16 @@ class Fun (commands.Cog):
         """Search for cocktails by name."""
 
         try:
-            async with self.session.get(f'https://www.thecocktaildb.com/api/json/v1/1/search.php?s={cocktailname}') as response:
-                parsed_response = await response.json()
-                cocktail_list = '**Cocktail Results:**\n'
+            response = await http.get(f'https://www.thecocktaildb.com/api/json/v1/1/search.php?s={cocktailname}', res_method = 'json')
+            cocktail_list = '**Cocktail Results:**\n'
 
-                try:
-                    for cocktail in parsed_response['drinks']:
-                        cocktail_list += f"{cocktail['strDrink']}: `{cocktail['idDrink']}`\n"
-                    await ctx.send(cocktail_list)
+            try:
+                for cocktail in response['drinks']:
+                    cocktail_list += f"{cocktail['strDrink']}: `{cocktail['idDrink']}`\n"
+                await ctx.send(cocktail_list)
 
-                except:
-                    await ctx.send("I couldn't find any cocktails for that searchterm. :c")
+            except:
+                await ctx.send("I couldn't find any cocktails for that searchterm. :c")
 
         except Exception as e:
             await ctx.send(e)
@@ -90,34 +87,33 @@ class Fun (commands.Cog):
     async def get_cocktail_info (self, cocktail_id):
 
         try:
-            async with self.session.get(f'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={cocktail_id}') as response:
-                parsed_response = await response.json()
+            response = await http.get(f'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={cocktail_id}', res_method = 'json')
 
-                if parsed_response['drinks'] is None:
-                    f = discord.Embed()
-                    f.add_field(name = 'error', value = f'There is no cocktail with this ID.\nSearch for a drink with `{self.bot.command_prefix}cocktail search`.')
-                    return f
+            if response['drinks'] is None:
+                f = discord.Embed()
+                f.add_field(name = 'error', value = f'There is no cocktail with this ID.\nSearch for a drink with `{self.bot.command_prefix}cocktail search`.')
+                return f
 
-                cocktail = parsed_response['drinks'][0]
+            cocktail = response['drinks'][0]
 
-                ingredients = ''
-                index = 1
-                while index <= 15:
-                    ingredient = f"{cocktail[f'strIngredient{index}']}"
-                    amount     = f"{cocktail[f'strMeasure{index}']}"
-                    if cocktail[f'strIngredient{index}'] is not None:
-                        if cocktail[f'strMeasure{index}'] is None:
-                            ingredients += f"{ingredient}\n"
-                        else:
-                            ingredients += f"{amount}of {ingredient}\n"
-                    index += 1
+            ingredients = ''
+            index = 1
+            while index <= 15:
+                ingredient = f"{cocktail[f'strIngredient{index}']}"
+                amount     = f"{cocktail[f'strMeasure{index}']}"
+                if cocktail[f'strIngredient{index}'] is not None:
+                    if cocktail[f'strMeasure{index}'] is None:
+                        ingredients += f"{ingredient}\n"
+                    else:
+                        ingredients += f"{amount}of {ingredient}\n"
+                index += 1
 
-                e = discord.Embed(title = f"{cocktail['strDrink']} ({cocktail['strAlcoholic']})")
-                e.add_field(name = 'Ingredients', value = ingredients)
-                e.add_field(name = 'Instructions', value = cocktail[f'strInstructions'])
-                e.set_thumbnail(url = cocktail['strDrinkThumb'])
+            e = discord.Embed(title = f"{cocktail['strDrink']} ({cocktail['strAlcoholic']})")
+            e.add_field(name = 'Ingredients', value = ingredients)
+            e.add_field(name = 'Instructions', value = cocktail[f'strInstructions'])
+            e.set_thumbnail(url = cocktail['strDrinkThumb'])
 
-                return e
+            return e
 
         except Exception as e:
             return e
@@ -136,9 +132,8 @@ class Fun (commands.Cog):
     async def get_random_cocktail (self, ctx):
 
         try:
-            async with self.session.get(f'https://www.thecocktaildb.com/api/json/v1/1/random.php') as response:
-                parsed_response = await response.json()
-                cocktail_id = parsed_response['drinks'][0]['idDrink']
+            response = await http.get(f'https://www.thecocktaildb.com/api/json/v1/1/random.php', res_method = 'json')
+            cocktail_id = response['drinks'][0]['idDrink']
 
         except Exception as e:
             await ctx.send(e)

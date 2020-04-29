@@ -1,7 +1,7 @@
 import random
-import aiohttp
 import discord
 
+from utils import http
 from discord.ext import commands
 
 
@@ -12,7 +12,6 @@ class Animals (commands.Cog):
     def __init__ (self, bot):
 
         self.bot            = bot
-        self.session        = self.bot.session
         self.unsplash_token = self.bot.unsplash_token
 
 
@@ -23,10 +22,9 @@ class Animals (commands.Cog):
         """Returns a random cat image."""
 
         try:
-            async with self.session.get('http://aws.random.cat/meow') as response:
-                parsed_response = await response.json()
-                msg = await ctx.send (parsed_response['file'])
-                await msg.add_reaction('🐾')
+            response = await http.get('http://aws.random.cat/meow', res_method = 'json')
+            msg = await ctx.send (response['file'])
+            await msg.add_reaction('🐾')
 
         except:
             await ctx.send("There are no cats around right now. 🐾")
@@ -39,10 +37,9 @@ class Animals (commands.Cog):
         """Returns a random dog image."""
 
         try:
-            async with self.session.get('http://random.dog/woof') as response:
-                filename = await response.text()
-                msg = await ctx.send(f"https://random.dog/{filename}")
-                await msg.add_reaction('🐶')
+            response = await http.get('http://random.dog/woof', res_method = 'text')
+            msg = await ctx.send(f"https://random.dog/{response}")
+            await msg.add_reaction('🐶')
 
         except:
             await ctx.send("There are no dogs around right now. 🐶")
@@ -55,10 +52,9 @@ class Animals (commands.Cog):
         """Returns a random fox image."""
 
         try:
-            async with self.session.get('http://randomfox.ca/floof') as response:
-                parsed_response = await response.json()
-                msg = await ctx.send(parsed_response['image'])
-                await msg.add_reaction('🦊')
+            response = await http.get('http://randomfox.ca/floof', res_method = 'json')
+            msg = await ctx.send(response['image'])
+            await msg.add_reaction('🦊')
 
         except:
             await ctx.send("There are no foxes around right now. 🦊")
@@ -71,15 +67,20 @@ class Animals (commands.Cog):
         """Returns a random bunny image."""
 
         try:
-            async with self.session.get(f'https://api.unsplash.com/search/photos?query=bunny&page={random.randint(0,10)}&per_page=30&client_id={self.unsplash_token}') as response:
-                parsed_response = await response.json()
-                entry_number    = random.randint(0,29)
-                e = discord.Embed()
-                e.set_image(url = parsed_response['results'][entry_number]['urls']['regular'])
-                e.set_footer(text = 'Photographer: ' + parsed_response['results'][entry_number]['user']['name'])
-                e.add_field(name = 'Link', value = parsed_response['results'][entry_number]['user']['links']['html'] + '?utm_source=unseen;ninja_bot&utm_medium=referral')
-                msg = await ctx.send(embed = e)
-                await msg.add_reaction('🐰')
+            r = random.randint(0,10)
+            t = self.unsplash_token
+            url = f'https://api.unsplash.com/search/photos?query=bunny&page={r}&per_page=30&client_id={t}'
+
+            response = await http.get(url, res_method = 'json')
+            entry_number = random.randint(0,29)
+
+            e = discord.Embed()
+            e.set_image(url = response['results'][entry_number]['urls']['regular'])
+            e.set_footer(text = 'Photographer: ' + response['results'][entry_number]['user']['name'])
+            e.add_field(name = 'Link', value = response['results'][entry_number]['user']['links']['html'] + '?utm_source=unseen;ninja_bot&utm_medium=referral')
+
+            msg = await ctx.send(embed = e)
+            await msg.add_reaction('🐰')
 
         except:
             await ctx.send("There are no bunnies around right now. 🐰")
