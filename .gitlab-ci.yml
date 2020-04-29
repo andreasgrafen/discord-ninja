@@ -1,14 +1,20 @@
 stages:
-- demo
+- deploy
 
 
 
-# Change this file to use CI
-# ==========================
+deploy:
 
-demoStage:
+  stage: deploy
 
-  stage: demo
+  only:
+  - master
 
   script:
-  - echo "Hello World"
+  - cp -rT ./cogs/ /srv/bot/discord-ninja-python/cogs
+  - cp -rT ./utils/ /srv/bot/discord-ninja-python/utils
+
+only:
+  changes:
+  - cogs/*.py
+  - utils/*.py
