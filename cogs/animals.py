@@ -132,6 +132,34 @@ class Animals (commands.Cog):
 
 
 
+    @commands.command(name = 'pig', aliases = ['waddles'])
+    async def get_random_pig (self, ctx):
+
+        """Returns a random pig image."""
+
+        async with ctx.channel.typing():
+
+            try:
+                r = random.randint(0,10)
+                t = self.unsplash_token
+                url = f'https://api.unsplash.com/search/photos?query=pig&page={r}&per_page=30&client_id={t}'
+
+                response = await http.get(url, res_method = 'json')
+                entry_number = random.randint(0,29)
+
+                e = discord.Embed()
+                e.set_image(url = response['results'][entry_number]['urls']['regular'])
+                e.set_footer(text = 'Photographer: ' + response['results'][entry_number]['user']['name'])
+                e.add_field(name = 'Link', value = response['results'][entry_number]['user']['links']['html'] + '?utm_source=unseen;ninja_bot&utm_medium=referral')
+
+                msg = await ctx.send(embed = e)
+                await msg.add_reaction('🐷')
+
+            except:
+                await ctx.send("There are no pigs around right now. 🐷")
+
+
+
     @commands.command(name = 'duck', aliases = ['quack'])
     async def get_random_duck (self, ctx):
 
@@ -180,7 +208,7 @@ class Animals (commands.Cog):
     @commands.command(name = 'owl', aliases = ['who'])
     async def get_random_owl (self, ctx):
 
-        """Returns a random lizard image."""
+        """Returns a random owl image."""
 
         async with ctx.channel.typing():
 
@@ -196,6 +224,93 @@ class Animals (commands.Cog):
 
             except:
                 await ctx.send("There are no owls around right now. 🦉")
+
+
+
+    @commands.command(name = 'panda')
+    async def get_random_panda (self, ctx):
+
+        """Returns a random panda image."""
+
+        async with ctx.channel.typing():
+
+            try:
+                response = await http.get('https://some-random-api.ml/img/panda', res_method = 'json')
+
+                e = discord.Embed()
+                e.set_image(url = response['link'])
+                e.add_field(name = 'Link', value = response['link'])
+
+                msg = await ctx.send(embed = e)
+                await msg.add_reaction('🐼')
+
+            except:
+                await ctx.send("There are no pandas around right now. 🐼")
+
+
+
+    @commands.command(name = 'redpanda')
+    async def get_random_redpanda (self, ctx):
+
+        """Returns a random red panda image."""
+
+        async with ctx.channel.typing():
+
+            try:
+                response = await http.get('https://some-random-api.ml/img/red_panda', res_method = 'json')
+
+                e = discord.Embed()
+                e.set_image(url = response['link'])
+                e.add_field(name = 'Link', value = response['link'])
+
+                await ctx.send(embed = e)
+
+            except:
+                await ctx.send("There are no red pandas around right now.")
+
+
+
+    @commands.command(name = 'koala')
+    async def get_random_koala (self, ctx):
+
+        """Returns a random koala image."""
+
+        async with ctx.channel.typing():
+
+            try:
+                response = await http.get('https://some-random-api.ml/img/koala', res_method = 'json')
+
+                e = discord.Embed()
+                e.set_image(url = response['link'])
+                e.add_field(name = 'Link', value = response['link'])
+
+                msg = await ctx.send(embed = e)
+                await msg.add_reaction('🐨')
+
+            except:
+                await ctx.send("There are no koalas around right now. 🐨")
+
+
+
+    @commands.command(name = 'birb', aliases = ['bird'])
+    async def get_random_birb (self, ctx):
+
+        """Returns a random birb image."""
+
+        async with ctx.channel.typing():
+
+            try:
+                response = await http.get('https://some-random-api.ml/img/birb', res_method = 'json')
+
+                e = discord.Embed()
+                e.set_image(url = response['link'])
+                e.add_field(name = 'Link', value = response['link'])
+
+                msg = await ctx.send(embed = e)
+                await msg.add_reaction('🐦')
+
+            except:
+                await ctx.send("There are no birbs around right now. 🐦")
 
 
 
