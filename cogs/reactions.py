@@ -77,6 +77,7 @@ class Reactions (commands.Cog):
     @commands.command(name = 'hug')
     async def hug_reaction (self, ctx, *, member: discord.Member = None):
 
+        """Hug a person."""
         hug_gif = ''
 
         if not member:
@@ -96,6 +97,7 @@ class Reactions (commands.Cog):
     @commands.command(name = 'pat')
     async def pat_reaction (self, ctx, *, member: discord.Member = None):
 
+        """Pat a person."""
         pat_gif = ''
 
         if not member:
@@ -115,6 +117,7 @@ class Reactions (commands.Cog):
     @commands.command(name = 'wink')
     async def wink_reaction (self, ctx, *, member: discord.Member = None):
 
+        """Wink at a person."""
         wink_gif = ''
 
         if not member:
