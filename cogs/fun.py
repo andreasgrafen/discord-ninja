@@ -1,8 +1,13 @@
-import random
 import discord
+import textwrap
 
-from utils import http
+from discord     import File
 from discord.ext import commands
+from utils       import http
+
+from PIL         import Image
+from PIL         import ImageFont
+from PIL         import ImageDraw
 
 
 
@@ -27,30 +32,54 @@ class Fun (commands.Cog):
 
 
     @_meme.command(name = 'create', aliases = ['make'])
-    async def create_meme (self, ctx, template: str, line1: str, line2: str):
+    async def create_meme (self, ctx, top_text: str, bottom_text: str):
 
-        """Example: ;meme create snek \"No booper\" \"do NOT!\""""
+        """Example: ;meme create \"No booper\" \"do NOT!\""""
 
-        def escape_literals (content):
-            return content.replace('-', '--').replace('_', '__').replace('?', '~q').replace(' ', '%20').replace("''", "\"")
+        try:
+            await ctx.message.attachments[0].save('images/input.png')
 
-        async with ctx.channel.typing():
+        except:
+            await ctx.send('Please also send me an image.')
+            return
+
+
+        with ctx.channel.typing():
 
             try:
-                response = await http.get(f'https://memegen.link/{template}/{escape_literals(line1)}/{escape_literals(line2)}', res_method = 'json')
-                await ctx.send(response['direct']['masked'])
+
+                image                   = Image.open('images/input.png')
+                watermark               = Image.open('images/watermark.png')
+                draw                    = ImageDraw.Draw(image)
+                img_width, img_height   = image.size
+                font_size               = (img_height//10) if (img_height <= img_width) else (img_width//10)
+                font                    = ImageFont.truetype('./assets/font.otf', font_size)
+                char_width, char_height = font.getsize('A')
+                line_length             = img_width//char_width
+                top_lines               = textwrap.wrap(top_text, width = line_length)
+                bottom_lines            = textwrap.wrap(bottom_text, width = line_length)
+                top_text_concat         = '\n'.join(top_lines)
+                bottom_text_concat      = '\n'.join(bottom_lines)
+
+                top_text_width, top_text_height = draw.multiline_textsize(top_text_concat, font = font, spacing = 10)
+                draw.multiline_text(((img_width-top_text_width)/2, 10), top_text_concat, font = font, spacing = 10, align = 'center')
+
+                bottom_text_width, bottom_text_height = draw.multiline_textsize(bottom_text_concat, font = font, spacing = 10)
+                draw.multiline_text(((img_width-bottom_text_width)/2, (img_height-bottom_text_height)-20), bottom_text_concat, font = font, spacing = 10, align = 'center')
+
+                watermark_size = font_size
+                watermark = watermark.resize((watermark_size, watermark_size))
+
+                canvas = Image.new('RGBA', (img_width, img_height), (0, 0, 0, 0))
+                canvas.paste(image, (0, 0))
+                canvas.paste(watermark, (0, img_height-font_size), mask = watermark)
+                canvas.save('images/output.png', 'PNG')
+
+                file = File('images/output.png')
+                await ctx.send(file = file)
 
             except Exception as e:
                 await ctx.send(e)
-
-
-
-    @_meme.command(name = 'templates', aliases = ['list'])
-    async def list_templates (self, ctx):
-
-        """See available templates."""
-
-        await ctx.send('See a list of available templates here: https://memegen.link/api/templates/')
 
 
 
