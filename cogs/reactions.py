@@ -1,6 +1,7 @@
 import re
 import discord
 
+from utils       import http
 from discord.ext import commands
 
 
@@ -70,6 +71,63 @@ class Reactions (commands.Cog):
         peach_triggers = ['butt', 'butts', 'ass', 'peach', 'peaches']
         if any(self.has_exact_match(peach_triggers, ctx.clean_content.lower())) is True:
             await ctx.add_reaction('🍑')
+
+
+
+    @commands.command(name = 'hug')
+    async def hug_reaction (self, ctx, *, member: discord.Member = None):
+
+        hug_gif = ''
+
+        if not member:
+            member = ctx.author
+
+        try:
+            response = await http.get('https://some-random-api.ml/animu/hug', res_method = 'json')
+            hug_gif = response['link']
+
+        except:
+            pass
+
+        await ctx.send(f"{ctx.author.mention} hugs {member.mention}\n{hug_gif}")
+
+
+
+    @commands.command(name = 'pat')
+    async def pat_reaction (self, ctx, *, member: discord.Member = None):
+
+        pat_gif = ''
+
+        if not member:
+            member = ctx.author
+
+        try:
+            response = await http.get('https://some-random-api.ml/animu/pat', res_method = 'json')
+            pat_gif = response['link']
+
+        except:
+            pass
+
+        await ctx.send(f"{ctx.author.mention} pats {member.mention}\n{pat_gif}")
+
+
+
+    @commands.command(name = 'wink')
+    async def wink_reaction (self, ctx, *, member: discord.Member = None):
+
+        wink_gif = ''
+
+        if not member:
+            member = ctx.author
+
+        try:
+            response = await http.get('https://some-random-api.ml/animu/wink', res_method = 'json')
+            wink_gif = response['link']
+
+        except:
+            pass
+
+        await ctx.send(f"{ctx.author.mention} winks at {member.mention}\n{wink_gif}")
 
 
 
