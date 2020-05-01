@@ -1,4 +1,6 @@
+import random
 import discord
+import datetime
 import textwrap
 
 from discord     import File
@@ -181,6 +183,66 @@ class Fun (commands.Cog):
 
             e = await self.get_cocktail_info(cocktail_id)
             await ctx.send(embed = e)
+
+
+
+    @commands.command(name = 'amazon', aliases = ['review'])
+    async def fake_review (self, ctx, rating: int = 5, rating_text: str = 'Best product ever!', *, content: str = 'ICH MAG ES!'):
+
+        avatar = ctx.author.avatar_url_as(static_format = 'png')
+        await avatar.save('images/avatar.png')
+
+        try:
+
+            font_regular = ImageFont.truetype('./assets/review.ttf', 13)
+            font_bold    = ImageFont.truetype('./assets/review-bold.ttf', 13)
+            font_small   = ImageFont.truetype('./assets/review-bold.ttf', 11)
+
+            # get body content size
+            review_body_size = Image.new('RGBA', (760, 1000), (0, 0, 0, 0))
+            review_draw      = ImageDraw.Draw(review_body_size)
+
+            char_width, char_height = font_regular.getsize('M')
+            line_length             = 1000/char_width
+            content_lines           = textwrap.wrap(content, width = line_length)
+            body_copy               = '\n'.join(content_lines)
+
+            content_width, content_height = review_draw.multiline_textsize(body_copy, font = font_regular, spacing = 6)
+
+
+            review     = Image.new('RGBA', (700, content_height + 170), '#FFFFFF')
+            user_image = Image.open('images/avatar.png')
+            user_mask  = Image.open('images/avatar-mask.png')
+            stars      = Image.open(f'images/stars-{rating}.png')
+
+            draw = ImageDraw.Draw(review)
+
+            # get text boundaries
+            user_name_w, user_name_h     = draw.textsize(ctx.author.display_name, font = font_regular)
+            rating_text_w, rating_text_h = draw.textsize(rating_text, font = font_bold)
+
+            # resize assets
+            user_image  = user_image.resize((34, 34))
+            stars       = stars.resize((90, 18))
+
+            # place assets
+            review.paste(user_image, (20, 20), mask = user_mask)
+            review.paste(stars, (20, 64))
+
+            # place text
+            draw.text((64, ((34-user_name_h)/2)+20), ctx.author.display_name, '#111111', font = font_regular)
+            draw.text((120, (82-rating_text_h)), rating_text, '#111111', font = font_bold)
+            draw.text((20, 85), f"Reviewed as a Meme on {datetime.datetime.now().strftime('%B %d, %Y')}.", '#555555', font = font_regular)
+            draw.text((20, 105), 'Verified Purchase', '#C45500', font = font_small)
+            draw.multiline_text((20, 130), body_copy, '#111111', font = font_regular, spacing = 6)
+            draw.text((20, content_height + 140), f"{random.randint(1, 200)} people found this helpful.", '#767676', font = font_regular)
+
+            # save and send
+            review.save('images/amazon.png', 'PNG')
+            await ctx.send(file = File('images/amazon.png'))
+
+        except Exception as e:
+            await ctx.send(e)
 
 
 
