@@ -75,8 +75,8 @@ class Fun (commands.Cog):
                 canvas.paste(watermark, (0, img_height-font_size), mask = watermark)
                 canvas.save('images/output.png', 'PNG')
 
-                file = File('images/output.png')
-                await ctx.send(file = file)
+                await ctx.channel.purge(limit = 1) # remove the message invoking this command
+                await ctx.send(content = f"Here is your meme {ctx.author.mention}.", file = File('images/output.png'))
 
             except Exception as e:
                 await ctx.send(e)
